@@ -32,7 +32,12 @@ def do_moon(self, params):
 def create_server():
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
-    webServer.serve_forever()
+    try:
+        webServer.serve_forever()
+    except KeyboardInterrupt:
+        print('quit')
 
-import threading
-threading.Thread(target=create_server).start()
+create_server()
+
+# import threading
+# threading.Thread(target=create_server).start()
