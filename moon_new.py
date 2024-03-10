@@ -42,8 +42,16 @@ def get_moon_data(lat, lon):
 
 def format7seg(alt_phase_percent_tuple):
     (alt, phase, percent) = alt_phase_percent_tuple
-    seven_seg_values = [0, 16, 32, 8, 64, 4, 2] #values to display, ie display.buff[x] = seven_segs[1] or sum(seven_segs)
-    seven_seg_value = sum(seven_seg_values[-round(percent/(100/6)):len(seven_seg_values)]) if phase > 180 else sum(seven_seg_values[0:round(percent/(100/6))+1])
+    seven_seg_values = [16, 32, 8, 64, 4, 2] #values to display, ie display.buff[x] = seven_segs[1] or sum(seven_segs)
+    if phase > 180: #we add from the array from end to start based on percent, 50% we add 64, 4, 2]
+        start_idx = -1 if round(percent/(100/6)) == 0 else -round(percent/(100/6))
+        end_idx = len(seven_seg_values)
+        seven_seg_value = sum(seven_seg_values[start_idx:end_idx])
+    else: #we add from the array from start to end based on percent, 50% we add [16, 32, 8
+        start_idx = 0
+        end_idx = round(percent/(100/6))
+        seven_seg_value = sum(seven_seg_values[start_idx:end_idx])
+    #seven_seg_value = sum(seven_seg_values[-round(percent/(100/6)):len(seven_seg_values)]) if phase > 180 else sum(seven_seg_values[0:round(percent/(100/6))])
     if alt < 0:
         seven_seg_value += 1
     return seven_seg_value
